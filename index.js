@@ -42,6 +42,7 @@ app.get('/update/:record/:ip/', (req,res)=>{
 
     res.send("Will be updating");
     updateDomainFile(recordName,newIP);
+    reloadNamed();
 })
 
 https.createServer({
