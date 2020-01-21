@@ -119,7 +119,7 @@ const updateDomainFile = (recordName,ip) =>{
     let f = fs.readFileSync(zoneFilePath);
     let zoneFileJson = zf.parseZoneFile(f.toString());
     if(getArec(zoneFileJson,recordName)===ip){
-         console.log(`${recordName} ip address not changed ${ip}, not updating`);
+         console.log(`${recordName} ip address not changed (${ip}), not updating`);
          return;
     }
     zoneFileJson = incrementSerial(zoneFileJson);
