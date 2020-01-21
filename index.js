@@ -1,6 +1,4 @@
 #!/usr/bin/env node
-var zf = require('zone-file');
-var fs = require('fs');
 const isValidDomain = require('is-valid-domain');
 const isIp = require('is-ip');
 const { exec } = require("child_process");
@@ -22,8 +20,27 @@ app.get('/',(req,res) => {
 });
 
 app.get('/update/:record/:ip/', (req,res)=>{
+    let usage = " Usage: https://url/record/ip/";
     console.log(req.params);
+    
+    let recordName = req.params.record;
+    let newIP = req.params.ip;
+
+    var lettersNumbers = /^[0-9a-zA-Z\-]+$/;
+    if(!recordName.match(lettersNumbers)){
+        console.log(recordName," - only letters and numbers in record name"+usage);
+        res.send('Invalid record name'+usage);
+        return;
+    }
+
+    if(!isIp(newIP)){
+        console.log(newIP," - invalid IP address"+usage);
+        res.send('Invalid IP address'+usage);
+        return;
+    }
+
     res.send("Will be updating");
+    updateDomainFile(recordName,newIP);
 })
 
 https.createServer({
@@ -59,25 +76,14 @@ const validateInput= (zoneFilePath,recordName,newIP) => {
         console.log(zoneFilePath," - file doesn't exist");
         process.exit(-1);
     }
-
-    var lettersNumbers = /^[0-9a-zA-Z\-]+$/;
-    if(!recordName.match(lettersNumbers)){
-        console.log(recordName," - only letters and numbers in record name");
-        process.exit(-1);
-    }
-
-    if(!isIp(newIP)){
-        console.log(newIP," - invalid IP address");
-        process.exit(-1);
-    }
 }
 
-const updateDomainFile = (record,ip) =>{
-    console.log(`TCL: updateDomain -> domain,record,ip`, record,ip);
+const updateDomainFile = (recordName,ip) =>{
+    console.log(`TCL: updateDomain -> domain,record,ip`, recordName,ip);
     let f = fs.readFileSync(zoneFilePath);
     let zoneFileJson = zf.parseZoneFile(f.toString());
     zoneFileJson = incrementSerial(zoneFileJson);
-    zoneFileJson = updateA(zoneFileJson,recordName,newIP);
+    zoneFileJson = updateA(zoneFileJson,recordName,ip);
     let newText = zf.makeZoneFile(zoneFileJson);
     fs.writeFileSync(zoneFilePath,newText);
 }
