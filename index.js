@@ -64,7 +64,6 @@ app.get('/update/:record/', (req,res)=>{
 
     res.send(`Will be updating ${recordName}.stormint.tk to ${newIP}`);
     updateDomainFile(recordName,newIP);
-    reloadNamed();
 })
 
 https.createServer({
