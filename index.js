@@ -17,7 +17,7 @@ const port = process.env.PORT || 3000;
 app.use(morgan('combined'));
 
 app.get('/',(req,res) => {
-    res.send('DynDNS record ip');
+    res.send('DynDNS record ip v2 record ip');
 });
 
 app.get('/update/:record/:ip/', (req,res)=>{
