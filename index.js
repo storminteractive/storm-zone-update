@@ -51,7 +51,10 @@ app.get('/update/:record/', (req,res)=>{
     console.log(req.params);
     
     let recordName = req.params.record;
-    let newIP = req.ip;
+    let newIP = req.connection.remoteAddress;
+    if (newIP.substr(0, 7) == "::ffff:") {
+        newIP = newIP.substr(7)
+    }
 
     var lettersNumbers = /^[0-9a-zA-Z\-]+$/;
     if(!recordName.match(lettersNumbers)){
