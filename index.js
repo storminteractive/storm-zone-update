@@ -17,11 +17,11 @@ const port = process.env.PORT || 3000;
 app.use(morgan('combined'));
 
 app.all('*',(req,res) => {
-    res.send('DynDNS record ip v2 record ip');
+    res.send('DynDNS update record ip v2');
 });
 
 app.get('/update/:record/:ip/', (req,res)=>{
-    let usage = " Usage: https://url/record/ip/";
+    let usage = " Usage: https://url/update/record/ip/";
     console.log(req.params);
     
     let recordName = req.params.record;
