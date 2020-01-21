@@ -11,6 +11,7 @@ const morgan = require('morgan');
 const zf = require('zone-file');
 
 const zoneFilePath = "/var/named/dynamic-zones/stormint.tk"
+const domainName = "stormint.tk"
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -21,7 +22,7 @@ app.get('/',(req,res) => {
 });
 
 app.get('/update/:record/:ip/', (req,res)=>{
-    let usage = " Usage: https://url/update/record/ip/";
+    let usage = " Usage: https://url/update/record/[ip/]";
     console.log(req.params);
     
     let recordName = req.params.record;
@@ -40,7 +41,26 @@ app.get('/update/:record/:ip/', (req,res)=>{
         return;
     }
 
-    res.send("Will be updating");
+    res.send(`Will be updating ${recordName}.stormint.tk to ${newIP}`);
+    updateDomainFile(recordName,newIP);
+    reloadNamed();
+})
+
+app.get('/update/:record/', (req,res)=>{
+    let usage = " Usage: https://url/update/record/[ip/]";
+    console.log(req.params);
+    
+    let recordName = req.params.record;
+    let newIP = req.ip;
+
+    var lettersNumbers = /^[0-9a-zA-Z\-]+$/;
+    if(!recordName.match(lettersNumbers)){
+        console.log(recordName," - only letters and numbers in record name"+usage);
+        res.send('Invalid record name'+usage);
+        return;
+    }
+
+    res.send(`Will be updating ${recordName}.stormint.tk to ${newIP}`);
     updateDomainFile(recordName,newIP);
     reloadNamed();
 })
