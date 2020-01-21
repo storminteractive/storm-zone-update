@@ -43,7 +43,6 @@ app.get('/update/:record/:ip/', (req,res)=>{
 
     res.send(`Will be updating ${recordName}.stormint.tk to ${newIP}`);
     updateDomainFile(recordName,newIP);
-    reloadNamed();
 })
 
 app.get('/update/:record/', (req,res)=>{
@@ -103,14 +102,31 @@ const validateInput= (zoneFilePath,recordName,newIP) => {
     }
 }
 
+const getArec = (zfj,record)=>{
+    let a = zfj.a;
+    for(i=0;i<a.length;i++){
+        if(a[i].name===record) {
+            console.log(`TCL: getArec of ${record}`, a[i].ip);
+            return a[i].ip;
+        }
+    }
+    console.log(`TCL: getArec of ${record} not found`);
+    return null;
+}
+
 const updateDomainFile = (recordName,ip) =>{
-    console.log(`TCL: updateDomain -> domain,record,ip`, recordName,ip);
+    console.log(`TCL: updateDomain -> record,ip`, recordName,ip);
     let f = fs.readFileSync(zoneFilePath);
     let zoneFileJson = zf.parseZoneFile(f.toString());
+    if(getArec(zoneFileJson,recordName)===ip){
+         console.log(`${recordName} ip address not changed ${ip}, not updating`);
+         return;
+    }
     zoneFileJson = incrementSerial(zoneFileJson);
     zoneFileJson = updateA(zoneFileJson,recordName,ip);
     let newText = zf.makeZoneFile(zoneFileJson);
     fs.writeFileSync(zoneFilePath,newText);
+    reloadNamed();
 }
 
 const reloadNamed = () =>{
