@@ -8,8 +8,9 @@ const path = require('path');
 const fs = require('fs');
 const l = require('stormwinston')('scaffolding-ssl');
 const morgan = require('morgan');
+const zf = require('zone-file');
 
-const zoneFilePath = "/var/named/replicated-zones/stormint.tk"
+const zoneFilePath = "/var/named/dynamic-zones/stormint.tk"
 
 const app = express();
 const port = process.env.PORT || 3000;
