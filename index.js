@@ -10,8 +10,8 @@ const l = require('stormwinston')('scaffolding-ssl');
 const morgan = require('morgan');
 const zf = require('zone-file');
 
-const zoneFilePath = "/var/named/dynamic-zones/stormint.tk"
-const domainName = "stormint.tk"
+const zoneFilePath = "/var/named/dynamic-zones/sys.stormint.com"
+const domainName = "sys.stormint.com"
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -41,7 +41,7 @@ app.get('/update/:record/:ip/', (req,res)=>{
         return;
     }
 
-    res.send(`Will be updating ${recordName}.stormint.tk to ${newIP}`);
+    res.send(`Will be updating ${recordName}.sys.stormint.com to ${newIP}`);
     updateDomainFile(recordName,newIP);
 })
 
@@ -62,7 +62,7 @@ app.get('/update/:record/', (req,res)=>{
         return;
     }
 
-    res.send(`Will be updating ${recordName}.stormint.tk to ${newIP}`);
+    res.send(`Will be updating ${recordName}.sys.stormint.com to ${newIP}`);
     updateDomainFile(recordName,newIP);
 })
 
