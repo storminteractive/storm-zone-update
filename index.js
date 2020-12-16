@@ -6,8 +6,10 @@ const express = require('express');
 const https = require('https');
 const path = require('path');
 const fs = require('fs');
+
 const l = require('stormwinston')('scaffolding-ssl');
 const morgan = require('morgan');
+
 const zf = require('zone-file');
 
 const zoneFilePath = "/var/named/dynamic-zones/sys.stormint.com"
@@ -67,8 +69,8 @@ app.get('/update/:record/', (req,res)=>{
 })
 
 https.createServer({
-    key: fs.readFileSync('./ssl.key'),
-    cert: fs.readFileSync('./ssl.crt')
+    key: fs.readFileSync('../ssl/stormint.com.key'),
+    cert: fs.readFileSync('../ssl/stormint.com.crt')
 }, app).listen(port,()=>{
     console.log("Listening on port "+port);
 });
